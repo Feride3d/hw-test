@@ -80,3 +80,61 @@ func TestTop10(t *testing.T) {
 		}
 	})
 }
+
+func TestTop10digit(t *testing.T) {
+	text = `Проверим цифры 5 5 5 5 5 4 1 4 4 4 3 3 3 6 6 
+	7 7 7 7 7 7 7 7 7 8 8 8 8 8 8 8 8 9 9 9 9 9 9 9`
+	t.Run("digit test", func(t *testing.T) {
+		expected := []string{
+			"7",        // 9
+			"8",        // 8
+			"9",        // 7
+			"5",        // 5
+			"4",        // 4
+			"3",        // 3
+			"6",        // 2
+			"1",        // 1
+			"Проверим", // 1
+			"цифры",    // 1
+		}
+		require.Equal(t, expected, Top10(text))
+
+	})
+}
+
+func TestTopStrangeSymbols(t *testing.T) {
+	text = `⌘ ⌘ ⌘ Plastheimurinn hefur sigrað
+	Skipulagið er sterkara
+	Síðasti báturinn er kaldur
+	Síðasta vasaljósið er þreytt
+	Og í hálsinum þefa klossar minninganna
+	Ó-ó! Mín vörn
+	sólargeisla gler auga
+	Ó-ó! Mín vörn
+	Jarðarfararball af fáránlegum heimi
+	Sólargeisli ódýra heimsins
+	Plastheimurinn hefur sigrað
+	Pappaviðvörunin fagnar
+	Hver þarf sneið af júlíhimni?
+	Ó-ó! Mín vörn
+	Sólargeisli blinda heimsins
+	Ó-ó! Mín vörn
+	Sorgarkúla Gleraugna
+	Syrgjandi kanína fáránlegs heims`
+	t.Run("digit test", func(t *testing.T) {
+		expected := []string{
+			"Mín",            // 4
+			"vörn",           // 4
+			"Ó-ó!",           // 4
+			"er",             // 3
+			"⌘",              // 3
+			"Plastheimurinn", // 2
+			"Sólargeisli",    // 2
+			"af",             // 2
+			"hefur",          // 2
+			"heimsins",       // 2
+		}
+		require.Equal(t, expected, Top10(text))
+
+	})
+}
