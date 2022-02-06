@@ -98,7 +98,6 @@ func TestTop10digit(t *testing.T) {
 			"цифры",    // 1
 		}
 		require.Equal(t, expected, Top10(text))
-
 	})
 }
 
@@ -135,6 +134,5 @@ func TestTopStrangeSymbols(t *testing.T) {
 			"heimsins",       // 2
 		}
 		require.Equal(t, expected, Top10(text))
-
 	})
 }
