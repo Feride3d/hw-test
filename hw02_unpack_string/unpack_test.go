@@ -62,7 +62,7 @@ func TestUnpackUTF8String(t *testing.T) {
 	}{
 		{input: "⌘本日3", expected: "⌘本日日日"},
 		{input: "Фйёч2щ", expected: "Фйёччщ"},
-		{input: "ð3Æöá", expected: "ððð3Æöá"},
+		{input: "ð3Æöá", expected: "ðððÆöá"},
 	}
 
 	for _, tc := range tests {

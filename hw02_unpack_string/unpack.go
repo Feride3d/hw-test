@@ -27,11 +27,13 @@ func Unpack(packedString string) (string, error) {
 		// If an invalid string was passed (the first rune is a digit), the function returns an error.
 		case (i == 0 && unicode.IsDigit(actualRune)): // IsDigit reports whether the rune is a decimal digit.
 			return "", ErrInvalidString
-		// If an invalid string was passed (the actual rune is a digit and the next rune (a rune following the actual rune) is a digit), the function returns an error.
+		/* If an invalid string was passed (the actual rune is a digit and the next rune
+		(a rune following the actual rune) is a digit), the function returns an error. */
 		case (unicode.IsDigit(actualRune) && unicode.IsDigit(nextRune)):
 			return "", ErrInvalidString
 		}
-		// If the the next rune (a rune following the actual rune) is a digit, then repeat the actual rune in the amount of the next rune.
+		/* If the the next rune (a rune following the actual rune) is a digit,
+		then repeat the actual rune in the amount of the next rune. */
 		if unicode.IsLetter(actualRune) && unicode.IsDigit(nextRune) {
 			repeatRune, err := strconv.Atoi(string(nextRune))
 			if err != nil {
