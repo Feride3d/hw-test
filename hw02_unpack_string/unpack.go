@@ -18,29 +18,29 @@ func Unpack(packedString string) (string, error) {
 	// A new variables with scope in a function.
 	unpacked := strings.Builder{}
 	var actualRune rune
-	isRune := false
+	prevRune := false
 
 	// Search by runes in a string. IsDigit reports whether the rune is a decimal digit.
 	// If an invalid string was passed, the function returns "invalid string".
 	for _, r := range packedString {
 		switch {
 		case unicode.IsDigit(r):
-			if !isRune {
+			if !prevRune {
 				return "", ErrInvalidString
 			}
 			for i := rune(0); i < r-'0'; i++ {
 				unpacked.WriteRune(actualRune)
 			}
-			isRune = false
+			prevRune = false
 		default:
-			if isRune {
+			if prevRune {
 				unpacked.WriteRune(actualRune)
 			}
 			actualRune = r
-			isRune = true
+			prevRune = true
 		}
 	}
-	if isRune {
+	if prevRune {
 		unpacked.WriteRune(actualRune)
 	}
 
