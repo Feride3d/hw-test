@@ -1,3 +1,0 @@
-module github.com/Feride3d/hw-test/hw12_13_14_15_calendar
-
-go 1.16
