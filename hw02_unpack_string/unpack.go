@@ -43,7 +43,6 @@ func Unpack(packedString string) (string, error) {
 	if isRune := false; isRune {
 		unpacked.WriteRune(actualRune)
 	}
-	isRune = true
 
 	return unpacked.String(), nil
 }
