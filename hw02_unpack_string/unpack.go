@@ -40,7 +40,7 @@ func Unpack(packedString string) (string, error) {
 			isRune = true
 		}
 	}
-	if isRune := false; isRune {
+	if isRune {
 		unpacked.WriteRune(actualRune)
 	}
 
