@@ -43,3 +43,34 @@ func TestUnpackInvalidString(t *testing.T) {
 		})
 	}
 }
+
+func TestUnpackEmptyString(t *testing.T) {
+	emptyString := []string{}
+	for _, tc := range emptyString {
+		tc := tc
+		t.Run(tc, func(t *testing.T) {
+			_, err := Unpack(tc)
+			require.Truef(t, errors.Is(err, ErrInvalidString), "actual error %q", err)
+		})
+	}
+}
+
+func TestUnpackUTF8String(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected string
+	}{
+		{input: "⌘本日3", expected: "⌘本日日日"},
+		{input: "Фйёч2щ", expected: "Фйёччщ"},
+		{input: "ð3Æöá", expected: "ðððÆöá"},
+	}
+
+	for _, tc := range tests {
+		tc := tc
+		t.Run(tc.input, func(t *testing.T) {
+			result, err := Unpack(tc.input)
+			require.NoError(t, err)
+			require.Equal(t, tc.expected, result)
+		})
+	}
+}
