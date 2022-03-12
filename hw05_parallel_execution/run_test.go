@@ -71,7 +71,7 @@ func TestRun(t *testing.T) {
 	t.Run("count of workers more than count of tasks", func(t *testing.T) {
 		tasksCount := 10
 		workersCount := 20
-		for _, mTs := range []struct {
+		for _, mTS := range []struct {
 			m   int
 			err error
 		}{
@@ -84,7 +84,7 @@ func TestRun(t *testing.T) {
 			{m: tasksCount, err: ErrErrorsLimitExceeded},
 			{m: tasksCount - 1, err: ErrErrorsLimitExceeded},
 		} {
-			t.Run(fmt.Sprintf("max error count %d", mTs.m), func(t *testing.T) {
+			t.Run(fmt.Sprintf("max error count %d", mTS.m), func(t *testing.T) {
 				tasks := make([]Task, 0, tasksCount)
 				var runTasksCount int32
 				for i := 0; i < tasksCount; i++ {
@@ -96,8 +96,8 @@ func TestRun(t *testing.T) {
 						return fmt.Errorf("error from task %d", i)
 					})
 				}
-				result := Run(tasks, workersCount, mTs.m)
-				require.Equal(t, mTs.err, result)
+				result := Run(tasks, workersCount, mTS.m)
+				require.Equal(t, mTS.err, result)
 				require.Equal(t, int32(tasksCount), runTasksCount)
 			})
 		}
