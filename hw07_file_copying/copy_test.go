@@ -60,7 +60,8 @@ func TestCopyTestdata(t *testing.T) {
 			require.NoError(t, err)
 			dstContent, err := ioutil.ReadFile(dst.Name())
 			require.NoError(t, err)
-			require.Zero(t, bytes.Compare(expContent, dstContent))
+			x := bytes.Compare
+			require.Zero(t, x(expContent, dstContent))
 		})
 	}
 }
