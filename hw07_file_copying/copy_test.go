@@ -36,7 +36,7 @@ func TestCopy(t *testing.T) {
 
 func TestCopyTestdata(t *testing.T) {
 	const dataPath = "testdata"
-	var srcPath = filepath.Join(dataPath, "input.txt")
+	srcPath := filepath.Join(dataPath, "input.txt")
 	for _, ts := range []struct {
 		offset int64
 		limit  int64
