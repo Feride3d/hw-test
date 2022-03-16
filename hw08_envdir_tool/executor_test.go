@@ -7,7 +7,6 @@ import (
 )
 
 func TestRunCmd(t *testing.T) {
-
 	t.Run("1", func(t *testing.T) {
 		var env Environment
 		cmd := []string{

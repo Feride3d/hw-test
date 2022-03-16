@@ -7,7 +7,6 @@ import (
 )
 
 func TestReadDir(t *testing.T) {
-
 	t.Run("default test", func(t *testing.T) {
 		envs, _ := ReadDir("testdata/env/")
 		expected := Environment{
