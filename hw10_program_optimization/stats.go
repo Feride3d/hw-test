@@ -2,7 +2,6 @@ package hw10programoptimization
 
 import (
 	"bufio"
-	"errors"
 	"fmt"
 	"io"
 	"strings"
@@ -23,27 +22,40 @@ type User struct {
 type DomainStat map[string]int
 
 func GetDomainStat(r io.Reader, domain string) (DomainStat, error) {
-	result, err := countDomains(r, "."+domain)
+	res, err := getUsers(r)
 	if err != nil {
 		return nil, fmt.Errorf("get users error: %w", err)
 	}
+	return countDomains(res, domain)
+}
+
+type users []User
+
+func getUsers(r io.Reader) (users, error) {
+	json := jsoniter.ConfigCompatibleWithStandardLibrary
+	scanner := bufio.NewScanner(r)
+	i := 0
+	user := User{}
+	result := make(users, 0, 100_000)
+	for scanner.Scan() {
+		if err := json.Unmarshal(scanner.Bytes(), &user); err != nil {
+			return result, err
+		}
+		result = append(result, user)
+		i++
+	}
+
 	return result, nil
 }
 
-func countDomains(r io.Reader, domain string) (DomainStat, error) {
-	user := &User{}
-	scanner := bufio.NewScanner(r)
+func countDomains(u users, domain string) (DomainStat, error) {
 	result := make(DomainStat)
-	for scanner.Scan() {
-		*user = User{}
-		if errors.Is(nil, io.EOF) {
-			break
-		}
-		if err := jsoniter.Unmarshal(scanner.Bytes(), user); err != nil {
-			return nil, err
-		}
+	for _, user := range u {
 		if strings.Contains(user.Email, "."+domain) {
-			result[strings.ToLower(strings.Split(user.Email, "@")[1])]++
+			matchDomain := strings.ToLower(strings.SplitN(user.Email, "@", 2)[1])
+			num := result[matchDomain]
+			num++
+			result[matchDomain] = num
 		}
 	}
 	return result, nil
