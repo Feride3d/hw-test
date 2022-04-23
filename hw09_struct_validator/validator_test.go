@@ -1,8 +1,6 @@
 package hw09structvalidator
 
 import (
-	"encoding/json"
-	"errors"
 	"fmt"
 	"testing"
 
@@ -20,7 +18,7 @@ type (
 		Email  string   `validate:"regexp:^\\w+@\\w+\\.\\w+$"`
 		Role   UserRole `validate:"in:admin,stuff"`
 		Phones []string `validate:"len:11"`
-		meta   json.RawMessage
+		//	meta   json.RawMessage
 	}
 
 	App struct {
@@ -39,37 +37,46 @@ type (
 	}
 )
 
-func TestValidate(t *testing.T) {
+func TestValidateErrors(t *testing.T) {
 	tests := []struct {
 		in          interface{}
-		expectedErr error
+		expectedErr ValidationErrors
 	}{
-		{
-			in: User{
-				ID:     "",
-				Name:   "",
-				Age:    10,
-				Email:  "",
-				Role:   "user",
-				Phones: []string{"", ""},
-				meta:   nil,
-			},
-			expectedErr: errors.New("minimum value error"),
-		},
+		{in: App{Version: "42.1"}, expectedErr: ValidationErrors{{Field: "Version", Err: ErrInvalidLen}}},
+		{in: App{Version: "42.2.2"}, expectedErr: ValidationErrors{{Field: "Version", Err: ErrInvalidLen}}},
+		{in: User{Email: "tuftuftuf"}, expectedErr: ValidationErrors{{Field: "Email", Err: ErrRegexNotMatch}}},
+		{in: User{ID: "200200"}, expectedErr: ValidationErrors{{Field: "ID", Err: ErrInvalidLen}}},
+		{in: User{Age: 80}, expectedErr: ValidationErrors{{Field: "Age", Err: ErrMaxValue}}},
 	}
 
 	for i, tt := range tests {
+		tt := tt
 		t.Run(fmt.Sprintf("case %d", i), func(t *testing.T) {
-			tt := tt
 			t.Parallel()
 
 			err := Validate(tt.in)
 			require.Error(t, err)
 
+			// unpack errors to return them in ValidationErrors type
 			var vErr ValidationErrors
 			require.ErrorAs(t, err, &vErr)
 
 			require.EqualError(t, vErr, tt.expectedErr.Error())
+		})
+	}
+}
+
+func TestPositiveValidation(t *testing.T) {
+	tests := []interface{}{
+		App{Version: "2.2.1"},
+		User{Email: "Kate@gmail.com"},
+	}
+
+	for i, tt := range tests {
+		tt := tt
+		t.Run(fmt.Sprintf("case %d", i), func(t *testing.T) {
+			t.Parallel()
+			require.NoError(t, Validate(tt))
 		})
 	}
 }
